@@ -1,0 +1,13 @@
+﻿.fire-button {
+text-align: right;
+top: 20px;
+    cursor: pointer;
+}
+
+.card-body img {
+    margin-left: auto;
+    margin-right: auto;
+    width: 20vw;
+    height: 20vh;
+    object-fit: contain;
+}

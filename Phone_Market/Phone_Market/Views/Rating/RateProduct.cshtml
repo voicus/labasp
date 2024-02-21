@@ -1,0 +1,46 @@
+﻿@model Phone_Market.DTO.GiveRatingModel;
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+<script type="text/javascript" src="~/js/CreateStarsRating.js"></script>
+<link rel="stylesheet" href="~/css/Stars.css" />
+
+<h1>Rate your @Model.ProductName</h1>
+
+<form asp-action="RateProduct" enctype="multipart/form-data" autocomplete="off">
+    <input asp-for="IsRated" class="form-control" style=" display : none; " />
+    <input asp-for="ProductId" class="form-control" style=" display : none; "/>
+    <div>
+            <div id="rating-location"></div>
+        @if (Model.IsRated == true)
+        {
+            <script>
+                voteStars("rating-location", "Rating", @Model.Rating);
+            </script>
+        }
+        else
+        {
+            <script>
+                createStars("rating-location", "Rating");
+            </script>
+        }
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Comment" class="control-label"></label>
+        <textarea asp-for="Comment" class="form-control"></textarea>
+        <span asp-validation-for="Comment"></span>
+    </div>
+    
+    <div class="form-group">
+        @if (Model.IsRated == false)
+        {
+            <input type="submit" value="Create" class="btn btn-primary" />
+        }
+        else
+        {
+            <input type="submit" value="Update" class="btn btn-primary" />
+
+        }
+    </div>
+</form>

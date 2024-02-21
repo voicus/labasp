@@ -1,0 +1,127 @@
+﻿@using Phone_Market.DTO;
+@model Phone_Market.DTO.ProductDto
+@inject CurrentUserDTO CurrentUser;
+@{
+    ViewData["Title"] = "View";
+}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="~/css/Stars.css" />
+<link rel="stylesheet" href="~/css/ProductDetails/ProductDetails.css" />
+<input type="hidden" id="productIdHidden" name="productId" value="@Model.Id" />
+<input type="hidden" id="currentUserIdHidden" name="currentUserId" value="@CurrentUser.Id" />
+<input type="hidden" id="isUserAuthenticatedHidden" name="isUserAuthenticated" value="@CurrentUser.IsLoggedIn" />
+<div class="container text-center">
+    <div class="row">
+        <div id="Carousel_Description" class="col-8">
+            <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    @for (int i = 0; i < Model.Images.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="@i" class="active" aria-current="true" aria-label="Slide @i"></button>
+
+                        }
+                        else
+                        {
+                            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="@i" aria-label="Slide @i"></button>
+
+                        }
+                    }
+                </div>
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.Images.Count; i++)
+                    {
+                        @if (i == 0)
+                        {
+                            <div class="carousel-item active" data-bs-interval="2000">
+                                <img src="data:image/png;base64,@Convert.ToBase64String(Model.Images[i])" class="d-block">
+                            </div>
+                        }
+                        else
+                        {
+
+                            <div class="carousel-item" data-bs-interval="2000">
+                                <img src="data:image/png;base64,@Convert.ToBase64String(Model.Images[i])" class="d-block">
+                            </div>
+                        }
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div id="Others" class="col-4">
+            <h5>@Model.Name</h5>
+            @if (Model.Discount > 0)
+            {
+                <span>@($"Discount: {Model.Discount} %")</span>
+                <p class="card-text">
+
+                    <span style="text-decoration: line-through;">@($"{Model.Price} USD")</span>
+                    <span class="card-text">@($"{Model.Price - (Model.Price * Model.Discount) / 100} USD") </span>
+                </p>
+            }
+            else
+            {
+                <p class="card-text">@($"{Model.Price} USD")</p>
+            }
+        
+            <div>
+                <button onclick="AddToCart()" class="btn btn-secondary"><i class="bi bi-cart-plus"></i></button>
+            </div>
+
+            @if (CurrentUser.RoleId == 2)
+            {
+                <a href="@Url.Action("EditProduct", "Product", new { id = Model.Id })" class="btn btn-secondary">Edit Product</a>
+            }
+        </div>
+    </div>
+    <div class="row" id="Description">
+        <h3>Description </h3>
+        <p>@Model.Description</p>
+    </div>
+    <div id="notification" class="notification hidden"></div>
+    <div class="overlay" id="overlay"></div>
+</div>
+<h4>Reviews</h4>
+@if (Model.Ratings.Count > 0)
+{
+    foreach (var rating in Model.Ratings)
+    {
+        <div class="card" style="margin-bottom: 10px;">
+            <div class="card-header">
+                <h3>
+                    @rating.UserName
+                    <span class="stars-span">
+                        @for (int i = 0; i < (int)rating.Rating; i++)
+                        {
+                            <span class="full-star material-symbols">star</span>
+                        }
+                        @for (float i = rating.Rating; i < 5; i++)
+                        {
+                            <span class="empty-star material-symbols">star</span>
+                        }
+                    </span>
+                </h3>
+            </div>
+            <div class="card-body">
+                @rating.Comment
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div>No reviews</div>
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/Product/Cart/AddToCart.js"></script>
+

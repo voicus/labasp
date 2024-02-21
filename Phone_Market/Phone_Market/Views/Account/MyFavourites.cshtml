@@ -1,0 +1,67 @@
+﻿@using Phone_Market.DTO;
+@using Phone_Market.Enums;
+
+@model IEnumerable<Phone_Market.DTO.ProductDto>
+
+@inject CurrentUserDTO CurrentUser;
+
+
+<script type="text/javascript" src="~/js/Favourite.js"></script>
+<link rel="stylesheet" href="~/css/Home.css" />
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                <div class="col-md-4 product-card " data-price="@product.Price - (@product.Price * @product.Discount)/100" data-brand-id="@product.BrandId">
+                    <div class="card mb-4 ">
+                        <div id="@product.Id" class="fire-button">
+                        </div>
+                        @if (CurrentUser.IsLoggedIn)
+                        {
+                            if (CurrentUser.RoleId == (int)RoleType.User)
+                            {
+                                <script>
+                                    addFavouriteButton("@product.Id.ToString()", "@CurrentUser.Id");
+                                </script>
+                            }
+                        }
+                        else
+                        {
+                            <div class="fire-button">
+                                <a asp-controller="Account" asp-action="Login" class="action-button">
+                                    <img src="~/img/empty-fire.png" title="Add to favourites">
+                                </a>
+                            </div>
+                        }
+                        <div class="card-body">
+                            <img src="data:image/png;base64,@Convert.ToBase64String(product.CoverImage)" />
+
+                            <h5 class="card-title">@product.Name</h5>
+
+                            @if (product.Discount > 0)
+                            {
+                                <p class="card-text">
+                                    @($"Discount: {product.Discount} % Price: {product.Price - (product.Price * product.Discount) / 100} USD")
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="card-text">@($"Price: {product.Price - (product.Price * product.Discount) / 100} USD")</p>
+                            }
+                            <div>
+                                <a asp-controller="Product" asp-action="ProductDetails" asp-route-productId="@product.Id" class="action-button">
+                                    <button type="button" class="btn btn-success">Product Info</button>
+                                </a>
+                                @* <a href="@Url.Action("ProductDetails", "Product", new { id = product.Id })" class="btn btn-dark stretched-link">Product Info </a> *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</body>

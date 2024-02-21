@@ -1,0 +1,102 @@
+﻿@model Phone_Market.DTO.ProductCreateModel
+
+@{
+    ViewData["Title"] = "View";
+
+}
+
+<h1>Create Product</h1>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" asp-controller="Product" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" type="text" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <div class="col-8">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                        </div>
+                        <input asp-for="Price" aria-label="Amount (to the nearest dollar)" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="BrandId" class="control-label">Brand</label>
+                <select asp-for="BrandId" class="form-control" id="brandDropdown">
+                </select>
+                <span asp-validation-for="BrandId" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="ColorId" class="control-label">Product Color</label>
+                <select asp-for="ColorId" class="form-control" id="colorMultiSelectDropdown">
+                </select>
+                <span asp-validation-for="ColorId" class="text-danger"></span>
+            </div>
+
+            
+            
+            <div class="form-group" id="CategoryList">
+                <label asp-for="CategoryId" class="control-label">Category</label>
+                <select asp-for="CategoryId" class="form-control" id="categoryDropdown"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Images" class="control-label"></label>
+                <input asp-for="Images" type="file" class="form-control" multiple id="Images" />
+                <span asp-validation-for="Images" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+
+        </form>
+    </div>
+    <div class="col-md-8">
+        <div class="image-preview-container">
+            <h2>Preview Images</h2>
+            <div id="preview-images"></div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<script type="text/javascript" src="~/js/Currency.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/Product/BrandList.js"></script>
+<script src="~/js/Product/PreviewImages.js"></script>
+<script src="~/js/Product/CategoryList.js"></script>
+<script src="~/js/Product/ColorList.js"></script>
+
+
+<script> new PreviewImages()</script>
+<script> new BrandList</script>
+<script>new CategoryList</script>
+<script>new ColorList</script>
+
+
+
+
+
+
+

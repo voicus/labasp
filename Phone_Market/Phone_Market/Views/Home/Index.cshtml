@@ -1,0 +1,134 @@
+﻿@using Phone_Market.DTO;
+@using Phone_Market.Enums;
+@{
+    ViewData["Title"] = "Home Page";
+
+    
+}
+@inject CurrentUserDTO CurrentUser;
+
+@model IEnumerable<Phone_Market.DTO.ProductDto>
+
+<h1>Best Deals</h1>
+
+
+<script type="text/javascript" src="~/js/Favourite.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="~/css/Home.css" />
+<link rel="stylesheet" href="~/css/Stars.css" />
+<link rel="stylesheet" href="~/css/FIlters/Filters.css" />
+
+
+<div class="content-container">
+
+    <div class="filter-container">
+
+        <h5>Brands</h5>
+        <div id="brandList">
+            <ul id="brandDropdown" class="checkbox-list"></ul>
+        </div>
+
+        
+
+        <div id="slidecontainer">
+            <span> Max Price: </span> <span id="f" style="font-weight:bold; color:black"></span> <span> $ </span>
+            <p><input type="range" min="0" max="10000" value="10000" step="10" class="slider-color" id="id1"</p>
+        </div>
+        <button id="applyFilterButton" class="btn btn-secondary">Apply Filters</button>
+    </div>
+
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                <div class="col-md-4 product-card " data-price="@product.Price - (@product.Price * @product.Discount)/100" data-brand-id="@product.BrandId">
+                    <div class="card mb-4 ">
+                            <div id="@product.Id" class="fire-button">
+                            </div>
+                            @if (CurrentUser.IsLoggedIn)
+                            {
+                                if (CurrentUser.RoleId == (int)RoleType.User)
+                                {
+                                    <div class="fire-button">
+                                        <script>
+                                            addFavouriteButton("@product.Id.ToString()", "@CurrentUser.Id");
+                                        </script>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="fire-button">
+                                <a asp-controller="Account" asp-action="Login" class="action-button">
+                                        <img src="~/img/empty-fire.png" title="Add to favourites">
+                                </a>
+                                </div>
+                            }
+                        <div class="card-body">
+                           <img src="data:image/png;base64,@Convert.ToBase64String(product.CoverImage)" />
+
+                            <h5 class="card-title">@product.Name</h5>
+
+                            @if (product.Discount > 0)
+                            {
+                                <p class="card-text">
+                                    @($"Discount: {product.Discount} % Price: {product.Price - (product.Price * product.Discount) / 100} USD")
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="card-text">@($"Price: {product.Price - (product.Price * product.Discount) / 100} USD")</p>
+                            }
+                            <div>
+                                <a asp-controller="Product" asp-action="ProductDetails" asp-route-id="@product.Id" class="action-button">
+                                    <button type="button" class="btn btn-dark">Product Info</button>
+                                </a>
+                                @if (CurrentUser.IsLoggedIn)
+                                {
+                                    if (CurrentUser.RoleId == (int)RoleType.User)
+                                    {
+                                        <a asp-controller="Rating" asp-action="RateProduct" asp-route-productId="@product.Id" class="action-button">
+                                            <button type="button" class="btn btn-secondary">Rate</button>
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <a asp-controller="Account" asp-action="Login" class="action-button">
+                                        <button type="button" class="btn btn-secondary">Rate</button>
+                                    </a>
+                                }
+                            </div>
+                            <div>
+                                @for (int i = 0; i < (int)product.AverageRating; i++)
+                                {
+                                    <span class="full-star material-symbols">star</span>
+                                }
+                                @for (double i = product.AverageRating; i < 5; i++)
+                                {
+                                    <span class="empty-star material-symbols">star</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+ </div>
+
+
+@* <script type="text/javascript" src="~/js/Filters.js"></script>*@
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script type="text/javascript" src="~/js/Product/Filters/PriceRange.js"></script>
+<script type="text/javascript" src="~/js/Product/Filters/BrandList.js"></script>
+<script type="text/javascript" src="~/js/Product/Filters/ApplyFilters.js"></script>
+<script> new BrandList()</script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<!-- Include Bootstrap Multiselect CSS -->
+<link rel="stylesheet" href="path/to/bootstrap-multiselect.css">
+
+<!-- Include Bootstrap and Bootstrap Multiselect JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+<script src="path/to/bootstrap-multiselect.js"></script>
+
+
